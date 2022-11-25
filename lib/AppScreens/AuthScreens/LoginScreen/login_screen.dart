@@ -70,6 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         } else
                           return null;
                       },
+                    
                       showPass: () {},
                       // ignore: prefer_if_null_operators
 
