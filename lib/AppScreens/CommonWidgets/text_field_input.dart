@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:meta_circles/AppScreens/Theme/colors.dart';
 
 class TextFieldInput extends StatefulWidget {
-  // final TextEditingController textEditingController;
+  final TextEditingController textEditingController;
   final bool isPass;
   final String hintText;
   void Function(String)? onChanged;
@@ -11,7 +11,7 @@ class TextFieldInput extends StatefulWidget {
   VoidCallback showPass;
   TextFieldInput({
     Key? key,
-    // required this.textEditingController,
+    required this.textEditingController,
     this.isPass = false,
     required this.hintText,
     required this.onChanged,

@@ -1,42 +1,32 @@
-import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:meta_circles/BottomNavigation/routes/routes_names.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
+
 import '../../../../Utils/network_handler.dart';
-import '../../../../Utils/validators.dart';
 
-class LoginBloc with Validators {
-  final _loginEmail = BehaviorSubject<String>();
-  final _loginPassword = BehaviorSubject<String>();
+part 'login_event.dart';
+part 'login_state.dart';
 
-  //Getters
-  Stream<String> get loginEmail => _loginEmail.stream.transform(emailValidator);
-  Stream<String> get loginPassword =>
-      _loginPassword.stream.transform(loginPasswordValidator);
-
-  Stream<bool> get isValid =>
-      Rx.combineLatest2(loginEmail, loginPassword, (loginEmail, pass) => true);
-
-  //Setters
-  Function(String) get changeloginEmail => _loginEmail.sink.add;
-  Function(String) get changeLoginPassword => _loginPassword.sink.add;
-
-  void submit(context) {
-    authenticateUser(_loginEmail.value, _loginPassword.value, context);
-  }
-
-  //Dispose
-  void dispose() {
-    _loginEmail.close();
-    _loginPassword.close();
+class LoginBloc extends Bloc<LoginEvent, LoginState> {
+  LoginBloc() : super(LoginInitial()) {
+    on<LoginButtonPressed>(
+      (event, emit) {
+        print(event.emailId);
+        print(event.password);
+        emit(LoginLoading());
+        // try {
+        //   authenticateUser(event.emailId, event.password);
+        //   emit(LoginInitial());
+        // } catch (error) {
+        //   emit(LoginFailure(error: error.toString()));
+        // }
+      },
+    );
   }
 }
 
-Future<void> authenticateUser(
-    String email, String password, BuildContext context) async {
+Future<void> authenticateUser(String email, String password) async {
   var body = json.encode({
     'email': email,
     'password': password,
@@ -54,17 +44,14 @@ Future<void> authenticateUser(
       // await this.getUserCoreData(context);
       // this.isUserLoggedIn = true;
       // checkIfUserConsultant();
-      Navigator.pushReplacementNamed(context, RouteNames.signupScreen);
 
-      log("User Entered");
       print("user entered");
     } else if (response.statusCode == 206) {
       throw Exception("No Core Details Exist");
-    } else
+    } else {
       throw Exception(json.decode(response.body)['error']);
+    }
   } catch (e) {
-    Navigator.pop(context);
-
     Network.handleError(e, showCustomMessage: true);
   }
 }
