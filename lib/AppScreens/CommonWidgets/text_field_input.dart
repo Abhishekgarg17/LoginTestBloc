@@ -34,6 +34,7 @@ class _TextFieldInputState extends State<TextFieldInput> {
     );
 
     return TextFormField(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       controller: widget.textEditingController,
       onChanged: widget.onChanged,
       validator: widget.validator,

@@ -66,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             _emailContorller.text.trim())) &&
                             (!regexMobile.hasMatch(
                                 _emailContorller.text.trim()))) {
-                          return 'Please enter a valid email \n or mobile';
+                          return 'Please enter a valid email or mobile';
                         } else
                           return null;
                       },
@@ -82,6 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     vSizedBox3,
                     // Password Field
                     TextFieldInput(
+            
                       validator: (value) {
                         if (value == null || value.length == 0) {
                           return 'Required';
