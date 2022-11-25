@@ -1,70 +1,33 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:developer';
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:meta_circles/BottomNavigation/routes/routes_names.dart';
-import 'package:rxdart/rxdart.dart';
-import '../../../../Utils/network_handler.dart';
-import '../../../../Utils/validators.dart';
+import 'package:meta_circles/AppScreens/AuthScreens/LoginScreen/bloc/login_event.dart';
+import 'package:meta_circles/AppScreens/AuthScreens/LoginScreen/bloc/login_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:meta_circles/AppScreens/AuthScreens/form_submission.dart';
+import 'package:meta_circles/Repositories/auth_repositories.dart';
 
-class LoginBloc with Validators {
-  final _loginEmail = BehaviorSubject<String>();
-  final _loginPassword = BehaviorSubject<String>();
+class LoginBloc extends Bloc<LoginEvent, LoginState> {
+  final AuthRepositories authRepo;
+  LoginBloc(this.authRepo) : super(LoginState());
 
-  //Getters
-  Stream<String> get loginEmail => _loginEmail.stream.transform(emailValidator);
-  Stream<String> get loginPassword =>
-      _loginPassword.stream.transform(loginPasswordValidator);
+  Stream<LoginState> mapEventToState(LoginEvent event) async* {
+    // EmailId updated
+    if (event is LoginEmailIdChanged) {
+      yield state.copyWith(emailId: event.emailId);
+    }
+    // Password updated
+    else if (event is LoginPasswordChanged) {
+      yield state.copyWith(password: event.password);
+    }
+    // Form submitted
+    else if (event is LoginSubmitted) {
+      yield state.copyWith(formstatus: FormSubmitting());
 
-  Stream<bool> get isValid =>
-      Rx.combineLatest2(loginEmail, loginPassword, (loginEmail, pass) => true);
-
-  //Setters
-  Function(String) get changeloginEmail => _loginEmail.sink.add;
-  Function(String) get changeLoginPassword => _loginPassword.sink.add;
-
-  void submit(context) {
-    authenticateUser(_loginEmail.value, _loginPassword.value, context);
-  }
-
-  //Dispose
-  void dispose() {
-    _loginEmail.close();
-    _loginPassword.close();
-  }
-}
-
-Future<void> authenticateUser(
-    String email, String password, BuildContext context) async {
-  var body = json.encode({
-    'email': email,
-    'password': password,
-  });
-  late http.Response response;
-
-  try {
-    response = await Network.call(
-      API_CALL_TYPE.POST,
-      '/api/v2/user/main/fetch/',
-      body: body,
-    );
-    if (response.statusCode == 200) {
-      // user = User.fromJson(json.decode(response.body));
-      // await this.getUserCoreData(context);
-      // this.isUserLoggedIn = true;
-      // checkIfUserConsultant();
-      Navigator.pushReplacementNamed(context, RouteNames.signupScreen);
-
-      log("User Entered");
-      print("user entered");
-    } else if (response.statusCode == 206) {
-      throw Exception("No Core Details Exist");
-    } else
-      throw Exception(json.decode(response.body)['error']);
-  } catch (e) {
-    Navigator.pop(context);
-
-    Network.handleError(e, showCustomMessage: true);
+      try {
+        await authRepo.login();
+        yield state.copyWith(formstatus: SubmissionSuccess());
+      } catch (e) {
+        yield state.copyWith(
+            formstatus: SubmissionFailed(exception: Exception(e)));
+      }
+    }
   }
 }

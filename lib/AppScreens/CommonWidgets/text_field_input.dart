@@ -5,6 +5,7 @@ class TextFieldInput extends StatefulWidget {
   // final TextEditingController textEditingController;
   final bool isPass;
   final String hintText;
+  String? Function(String?)? validator;
   void Function(String)? onChanged;
   String? errorText;
   final TextInputType textInputType;
@@ -15,6 +16,7 @@ class TextFieldInput extends StatefulWidget {
     this.isPass = false,
     required this.hintText,
     required this.onChanged,
+    required this.validator,
     required this.showPass,
     this.errorText,
     required this.textInputType,
@@ -31,8 +33,9 @@ class _TextFieldInputState extends State<TextFieldInput> {
       borderSide: Divider.createBorderSide(context),
     );
 
-    return TextField(
+    return TextFormField(
       // controller: widget.textEditingController,
+      validator: widget.validator,
       onChanged: widget.onChanged,
       decoration: InputDecoration(
         fillColor: greyColorWithOpacity,

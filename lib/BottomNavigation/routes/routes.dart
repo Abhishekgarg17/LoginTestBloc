@@ -15,8 +15,8 @@ class Routes {
           builder: (context) => const LoginScreen(),
         );
 
-      case RouteNames.signupScreen:
-        return MaterialPageRoute(builder: (context) => const SignupScreen());
+      // case RouteNames.signupScreen:
+      //   return MaterialPageRoute(builder: (context) => const SignupScreen());
 
       default:
         null;
