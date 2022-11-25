@@ -1,8 +1,9 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-
+import 'package:meta/meta.dart';
 import '../../../../Utils/network_handler.dart';
 
 part 'login_event.dart';
@@ -10,23 +11,26 @@ part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc() : super(LoginInitial()) {
-    on<LoginButtonPressed>(
-      (event, emit) {
-        print(event.emailId);
-        print(event.password);
+    on<LoginingEvent>(
+      (event, emit) async {
         emit(LoginLoading());
-        // try {
-        //   authenticateUser(event.emailId, event.password);
-        //   emit(LoginInitial());
-        // } catch (error) {
-        //   emit(LoginFailure(error: error.toString()));
-        // }
+        print(event.email);
+        print(event.password);
+        final result = await authenticateUser(event.email, event.password);
+        log("Result:$result");
+        if (result == "200") {
+          emit(LoginSuccess());
+        } else if (result == "404") {
+          emit(const LoginFailure(error: "User not Found"));
+        } else if (result != "200") {
+          emit(const LoginFailure(error: "Failed to Login"));
+        }
       },
     );
   }
 }
 
-Future<void> authenticateUser(String email, String password) async {
+Future<dynamic> authenticateUser(String email, String password) async {
   var body = json.encode({
     'email': email,
     'password': password,
@@ -52,6 +56,10 @@ Future<void> authenticateUser(String email, String password) async {
       throw Exception(json.decode(response.body)['error']);
     }
   } catch (e) {
-    Network.handleError(e, showCustomMessage: true);
+    log(response.statusCode.toString());
+    return response.statusCode.toString();
+
+    // Network.handleError(e, showCustomMessage: true);
   }
+  return response.statusCode.toString();
 }

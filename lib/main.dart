@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta_circles/AppScreens/AuthScreens/LoginScreen/bloc/login_bloc.dart';
-import 'package:meta_circles/AppScreens/AuthScreens/SignupScreen/bloc/signup_bloc.dart';
 import 'package:meta_circles/AppScreens/Theme/app_theme.dart';
 import 'package:meta_circles/BottomNavigation/routes/routes.dart';
 import 'package:meta_circles/BottomNavigation/routes/routes_names.dart';
 import 'package:meta_circles/BusinessLogic/bloc/authentication_bloc.dart';
 import 'package:meta_circles/Utils/app_strings.dart';
-import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());

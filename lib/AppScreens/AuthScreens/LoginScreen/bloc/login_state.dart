@@ -7,7 +7,10 @@ abstract class LoginState extends Equatable {
   List<Object> get props => [];
 }
 
-class LoginInitial extends LoginState {}
+class LoginInitial extends LoginState {
+  @override
+  List<Object> get props => [];
+}
 
 class LoginLoading extends LoginState {}
 
@@ -23,4 +26,7 @@ class LoginFailure extends LoginState {
   String toString() => 'LoginFailure { error: $error }';
 }
 
-class LoginSuccess extends LoginState {}
+class LoginSuccess extends LoginState {
+  @override
+  List<Object> get props => [];
+}
