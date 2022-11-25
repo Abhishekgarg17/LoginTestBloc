@@ -22,6 +22,14 @@ class _LoginScreenState extends State<LoginScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailContorller = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  static String patternEmail =
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
+  RegExp regexEmail = new RegExp(patternEmail);
+
+  static String patternMobile = r'^[6-9]\d{9}$';
+  RegExp regexMobile = new RegExp(patternMobile);
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -50,7 +58,18 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     TextFieldInput(
                       textEditingController: _emailContorller,
-                      validator: (p0) {},
+                      validator: (val) {
+                        if (val == null || val.length == 0) {
+                          return 'Required';
+                        }
+                        if ((!regexEmail.hasMatch(
+                            _emailContorller.text.trim())) &&
+                            (!regexMobile.hasMatch(
+                                _emailContorller.text.trim()))) {
+                          return 'Please enter a valid email \n or mobile';
+                        } else
+                          return null;
+                      },
                       showPass: () {},
                       // ignore: prefer_if_null_operators
 
@@ -63,7 +82,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     vSizedBox3,
                     // Password Field
                     TextFieldInput(
-                      validator: (p0) {},
+                      validator: (value) {
+                        if (value == null || value.length == 0) {
+                          return 'Required';
+                        }
+                        if (value.length < 6) {
+                          return 'Password must be of atleast 6 characters.';
+                        }
+                        return null;
+                      },
                       textEditingController: _passwordController,
                       hintText: 'Password',
                       showPass: () {},
