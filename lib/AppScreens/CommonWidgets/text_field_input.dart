@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meta_circles/AppScreens/Theme/colors.dart';
 
+// ignore: must_be_immutable
 class TextFieldInput extends StatefulWidget {
   final TextEditingController textEditingController;
   final bool isPass;
@@ -34,6 +35,10 @@ class _TextFieldInputState extends State<TextFieldInput> {
     );
 
     return TextFormField(
+      onEditingComplete: () {
+        FocusScope.of(context).nextFocus();
+      },
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       controller: widget.textEditingController,
       onChanged: widget.onChanged,
       validator: widget.validator,
@@ -44,14 +49,6 @@ class _TextFieldInputState extends State<TextFieldInput> {
         errorText: widget.errorText,
         border: inputBorder,
         hintStyle: TextStyle(color: greyTextColor),
-        suffixIcon: widget.isPass
-            ? IconButton(
-                onPressed: widget.showPass,
-                icon: widget.isPass
-                    ? const Icon(Icons.lock_outline)
-                    : const Icon(Icons.lock_open_outlined),
-              )
-            : null,
         focusedBorder: inputBorder,
         enabledBorder: inputBorder,
         filled: true,

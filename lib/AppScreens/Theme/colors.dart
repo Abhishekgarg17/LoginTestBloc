@@ -8,6 +8,11 @@ final Color blueColor = Color.fromARGB(255, 23, 139, 234);
 
 final greyTextColor = Colors.grey[400];
 
+const Color whiteColor = Colors.white;
+
+const Color greenColor = Colors.green;
+const Color redColor = Colors.red;
+
 final greyColorWithOpacity = Colors.grey[500]!.withOpacity(0.5);
 
 /// get Color object for the given [hexColor] hex value

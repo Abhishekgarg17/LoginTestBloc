@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meta_circles/AppScreens/AuthScreens/LoginScreen/bloc/login_bloc.dart';
 import 'package:meta_circles/AppScreens/Theme/app_theme.dart';
 import 'package:meta_circles/BottomNavigation/routes/routes.dart';
 import 'package:meta_circles/BottomNavigation/routes/routes_names.dart';
-import 'package:meta_circles/BusinessLogic/bloc/authentication_bloc.dart';
+import 'package:meta_circles/BusinessLogic/Signupbloc/signup_bloc.dart';
 import 'package:meta_circles/Utils/app_strings.dart';
+import 'BusinessLogic/Authenticationbloc/authentication_bloc.dart';
+import 'BusinessLogic/Loginbloc/login_bloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -23,6 +24,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => LoginBloc(),
+        ),
+        BlocProvider(
+          create: (context) => SignupBloc(),
         )
       ],
       child: MaterialApp(

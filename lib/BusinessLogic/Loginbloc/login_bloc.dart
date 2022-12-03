@@ -10,23 +10,28 @@ part 'login_event.dart';
 part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
+  late bool isShow;
   LoginBloc() : super(LoginInitial()) {
     on<LoginingEvent>(
       (event, emit) async {
         emit(LoginLoading());
-        print(event.email);
-        print(event.password);
         final result = await authenticateUser(event.email, event.password);
-        log("Result:$result");
+        log("LoginBlocResult:$result");
         if (result == "200") {
           emit(LoginSuccess());
-        } else if (result == "404") {
-          emit(const LoginFailure(error: "User not Found"));
         } else if (result != "200") {
-          emit(const LoginFailure(error: "Failed to Login"));
+          emit(LoginFailure(error: result));
         }
       },
     );
+
+    on<ShowPassoword>((event, emit) {
+      if (isShow == false) {
+        isShow = true;
+      } else {
+        isShow = false;
+      }
+    });
   }
 }
 
@@ -44,12 +49,7 @@ Future<dynamic> authenticateUser(String email, String password) async {
       body: body,
     );
     if (response.statusCode == 200) {
-      // user = User.fromJson(json.decode(response.body));
-      // await this.getUserCoreData(context);
-      // this.isUserLoggedIn = true;
-      // checkIfUserConsultant();
-
-      print("user entered");
+      log("LoginBloc:User Entered or Successfully Login");
     } else if (response.statusCode == 206) {
       throw Exception("No Core Details Exist");
     } else {
@@ -57,9 +57,7 @@ Future<dynamic> authenticateUser(String email, String password) async {
     }
   } catch (e) {
     log(response.statusCode.toString());
-    return response.statusCode.toString();
-
-    // Network.handleError(e, showCustomMessage: true);
+    return json.decode(response.body)['error'];
   }
   return response.statusCode.toString();
 }
