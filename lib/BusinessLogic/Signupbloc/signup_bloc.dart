@@ -1,17 +1,17 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:http/http.dart' as http;
-import '../../../Utils/network_handler.dart';
+import '../../Repositories/authentication_repostiory.dart';
 part 'signup_event.dart';
 part 'signup_state.dart';
 
 class SignupBloc extends Bloc<SignupEvent, SignupState> {
+  final AuthenticationRepository _authenticationRepository =
+      AuthenticationRepository();
   SignupBloc() : super(SignupInitial()) {
     on<SignupButtonOnpressedEvent>((event, emit) async {
       emit(SignupLoading());
-      final result = await registerUser(
+      final result = await _authenticationRepository.registerUser(
           event.name, event.email, event.password, event.phone);
       log("SignupBloc: $result");
       if (result == "200") {
@@ -23,32 +23,4 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
   }
 }
 
-Future<dynamic> registerUser(
-    String name, String email, String password, String phone) async {
-  late http.Response response;
-  try {
-    response = await Network.call(
-      API_CALL_TYPE.POST,
-      '/api/v2/user/main/create/',
-      body: json.encode({
-        'first_name': name,
-        'email': email,
-        'password': password,
-        'platform': 'THCAPP',
-        'phone': phone
-      }),
-    );
-    if (response.statusCode == 200) {
-      log("User registered");
 
-      // user = User.fromJson(json.decode(response.body));
-    } else {
-      throw Exception(json.decode(response.body)['error']);
-    }
-  } catch (e) {
-    log(response.body.toString());
-    return json.decode(response.body)['error'].toString();
-    // return response.statusCode.toString();
-  }
-  return response.statusCode.toString();
-}
