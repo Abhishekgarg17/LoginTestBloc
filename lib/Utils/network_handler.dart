@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-
 // ignore: camel_case_types
 enum API_CALL_TYPE { GET, POST, PUT, DELETE, PATCH }
 
@@ -14,14 +13,14 @@ class Network {
   static String generalErrorMsg = "Some Error Occured";
 
   static Future<http.Response> call(
-      API_CALL_TYPE type,
-      String endPoint, {
-        var params,
-        var body,
-        bool setContentType = true,
-        bool setContentAsFormData = false,
-        bool staging = false,
-      }) async {
+    API_CALL_TYPE type,
+    String endPoint, {
+    var params,
+    var body,
+    bool setContentType = true,
+    bool setContentAsFormData = false,
+    bool staging = false,
+  }) async {
     String username = "alnourish.official@gmail.com";
     String pass = "ackshayjain1";
     String basicAuth = 'Basic ' + base64Encode(utf8.encode('$username:$pass'));

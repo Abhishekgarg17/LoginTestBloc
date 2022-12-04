@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:meta_circles/AppScreens/Theme/colors.dart';
 
+// ignore: must_be_immutable
 class TextFieldInput extends StatefulWidget {
-  // final TextEditingController textEditingController;
+  final TextEditingController textEditingController;
   final bool isPass;
   final String hintText;
   void Function(String)? onChanged;
+  String? Function(String?)? validator;
   String? errorText;
   final TextInputType textInputType;
   VoidCallback showPass;
   TextFieldInput({
     Key? key,
-    // required this.textEditingController,
+    required this.textEditingController,
+    required this.validator,
     this.isPass = false,
     required this.hintText,
     required this.onChanged,
@@ -31,9 +34,14 @@ class _TextFieldInputState extends State<TextFieldInput> {
       borderSide: Divider.createBorderSide(context),
     );
 
-    return TextField(
-      // controller: widget.textEditingController,
+    return TextFormField(
+      onEditingComplete: () {
+        FocusScope.of(context).nextFocus();
+      },
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      controller: widget.textEditingController,
       onChanged: widget.onChanged,
+      validator: widget.validator,
       decoration: InputDecoration(
         fillColor: greyColorWithOpacity,
         focusColor: blueColor,
@@ -41,14 +49,6 @@ class _TextFieldInputState extends State<TextFieldInput> {
         errorText: widget.errorText,
         border: inputBorder,
         hintStyle: TextStyle(color: greyTextColor),
-        suffixIcon: widget.isPass
-            ? IconButton(
-                onPressed: widget.showPass,
-                icon: widget.isPass
-                    ? const Icon(Icons.lock_outline)
-                    : const Icon(Icons.lock_open_outlined),
-              )
-            : null,
         focusedBorder: inputBorder,
         enabledBorder: inputBorder,
         filled: true,

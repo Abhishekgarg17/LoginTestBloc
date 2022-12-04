@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:meta_circles/AppScreens/AuthScreens/LoginScreen/bloc/login_bloc.dart';
-import 'package:meta_circles/AppScreens/AuthScreens/SignupScreen/bloc/signup_bloc.dart';
-import 'package:meta_circles/AppScreens/AuthScreens/SignupScreen/sign_up_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta_circles/AppScreens/Theme/app_theme.dart';
 import 'package:meta_circles/BottomNavigation/routes/routes.dart';
 import 'package:meta_circles/BottomNavigation/routes/routes_names.dart';
+import 'package:meta_circles/BusinessLogic/Signupbloc/signup_bloc.dart';
 import 'package:meta_circles/Utils/app_strings.dart';
-import 'package:provider/provider.dart';
+import 'BusinessLogic/Authenticationbloc/authentication_bloc.dart';
+import 'BusinessLogic/Loginbloc/login_bloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,10 +17,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
+    return MultiBlocProvider(
       providers: [
-        Provider<LoginBloc>(create: (context) => LoginBloc()),
-        Provider<SignUpBloc>(create: (context) => SignUpBloc()),
+        BlocProvider(
+          create: (context) => AuthenticationBloc(),
+        ),
+        BlocProvider(
+          create: (context) => LoginBloc(),
+        ),
+        BlocProvider(
+          create: (context) => SignupBloc(),
+        )
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
