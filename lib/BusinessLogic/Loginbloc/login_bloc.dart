@@ -57,7 +57,7 @@ Future<dynamic> authenticateUser(String email, String password) async {
     }
   } catch (e) {
     log(response.statusCode.toString());
-    return json.decode(response.body)['error'];
+    return response.statusCode.toString();
   }
   return response.statusCode.toString();
 }

@@ -47,7 +47,8 @@ Future<dynamic> registerUser(
     }
   } catch (e) {
     log(response.body.toString());
-    return json.decode(response.body)['error'];
+    // return json.decode(response.body)['error'];
+    return response.body.toString();
   }
   return response.statusCode.toString();
 }
