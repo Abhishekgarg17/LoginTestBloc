@@ -153,6 +153,10 @@ class _SignupScreenState extends State<SignupScreen> {
 
   _confirmTextField() {
     return TextFormField(
+      onEditingComplete: () {
+        FocusScope.of(context).nextFocus();
+      },
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       controller: _confirmPasswordController,
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -195,6 +199,10 @@ class _SignupScreenState extends State<SignupScreen> {
   _passwordTextField() {
     {
       return TextFormField(
+        onEditingComplete: () {
+        FocusScope.of(context).nextFocus();
+      },
+      autovalidateMode: AutovalidateMode.onUserInteraction,
         controller: _passwordContorller,
         validator: (value) {
           if (value == null || value.isEmpty) {

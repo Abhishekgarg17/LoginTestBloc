@@ -155,6 +155,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   _passowordTextField() {
     return TextFormField(
+      onEditingComplete: () {
+        FocusScope.of(context).nextFocus();
+      },
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       controller: _passwordController,
       validator: (value) {
         if (value == null || value.isEmpty) {
